@@ -1,0 +1,26 @@
+services:
+  app.shared.infrastructure.eda.routed_projection_service:
+    class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedProjectionService
+    arguments:
+      - !service_locator
+          App\Good\Command\GoodPriceAggregate: '@App\Good\Projection\GoodPriceViewProjectionService'
+
+  app.shared.infrastructure.eda.routed_event_factory:
+    class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedEventFactory
+    arguments:
+      - !service_locator
+          GoodPriceUpdatedEvent: '@App\Good\Event\GoodPriceUpdatedEventFactory'
+
+  app.shared.infrastructure.eda.doctrine_event_store:
+    class: App\Shared\Infrastructure\EventDrivenAggregate\DoctrineEventStore
+    arguments:
+      - '@App\Shared\Infrastructure\EventDrivenAggregate\EventRepository'
+      - '@app.shared.infrastructure.eda.routed_event_factory'
+
+  nlf.component.event.aggregate_events_handler:
+    class: Nlf\Component\Event\Aggregate\AggregateEventsHandler
+    arguments:
+      $eventStore: '@app.shared.infrastructure.eda.doctrine_event_store'
+      $projectionService: '@app.shared.infrastructure.eda.routed_projection_service'
+
+  Nlf\Component\Event\Aggregate\AggregateEventsHandler: '@nlf.component.event.aggregate_events_handler'

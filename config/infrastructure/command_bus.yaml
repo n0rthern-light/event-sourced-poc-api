@@ -1,0 +1,8 @@
+services:
+  app.shared.cqrs.command_bus.command_bus_impl:
+    class: App\Shared\CQRS\CommandBus\CommandBusImpl
+    arguments:
+      - !service_locator
+          App\Good\Command\UpdateGoodPriceCommand: '@App\Good\Command\UpdateGoodPriceHandler'
+
+  App\Shared\CQRS\CommandBus\CommandBusInterface: '@app.shared.cqrs.command_bus.command_bus_impl'
