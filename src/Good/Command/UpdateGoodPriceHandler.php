@@ -6,7 +6,6 @@ use App\Money\DollarMoney;
 use App\Shared\CQRS\CommandBus\CommandHandlerInterface;
 use App\Shared\Infrastructure\EventDrivenAggregate\StringUuid;
 use Nlf\Component\Event\Aggregate\AggregateEventsHandler;
-use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
 
 final class UpdateGoodPriceHandler implements CommandHandlerInterface
 {
@@ -19,13 +18,8 @@ final class UpdateGoodPriceHandler implements CommandHandlerInterface
 
     public function __invoke(UpdateGoodPriceCommand $command): void
     {
-        $goodPriceAggregate = new GoodPriceAggregate($this->buildAggregateUuid($command->goodCode));
+        $goodPriceAggregate = new GoodAggregate(new StringUuid($command->aggregateUuid));
         $goodPriceAggregate->updatePrice(new DollarMoney($command->priceInUsd));
         $this->aggregateEventsHandler->commitAggregateEvents($goodPriceAggregate);
-    }
-
-    private function buildAggregateUuid(string $goodCode): AggregateUuidInterface
-    {
-        return new StringUuid('GOOD:' . $goodCode);
     }
 }

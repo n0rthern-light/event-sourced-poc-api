@@ -1,0 +1,9 @@
+services:
+  Predis\ClientInterface:
+    factory:
+      - App\Shared\Infrastructure\Redis\RedisClientFactory
+      - create
+    arguments:
+      $uri: '%env(REDIS_URL)%'
+
+  App\Good\Query\GoodViewRepositoryInterface: '@App\Good\Query\RedisGoodViewRepository'

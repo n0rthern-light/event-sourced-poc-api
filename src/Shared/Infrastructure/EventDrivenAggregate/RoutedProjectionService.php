@@ -3,6 +3,7 @@
 namespace App\Shared\Infrastructure\EventDrivenAggregate;
 
 use Nlf\Component\Event\Aggregate\AbstractAggregateRoot;
+use Nlf\Component\Event\Aggregate\EventCollectionInterface;
 use Nlf\Component\Event\Aggregate\ProjectionServiceInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
@@ -17,7 +18,7 @@ final class RoutedProjectionService implements ProjectionServiceInterface
         $this->container = $container;
     }
 
-    public function execute(AbstractAggregateRoot $aggregate, array $events): void
+    public function execute(AbstractAggregateRoot $aggregate, EventCollectionInterface $events): void
     {
         if (!$this->container->has($aggregate::class)) {
 

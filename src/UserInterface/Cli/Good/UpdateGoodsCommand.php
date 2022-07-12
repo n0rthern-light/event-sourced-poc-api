@@ -23,8 +23,22 @@ class UpdateGoodsCommand extends Command
     {
         $this->commandBus->execute(
             new UpdateGoodPriceCommand(
-                'USD',
+                'GOOD:USD',
                 125
+            )
+        );
+
+        $this->commandBus->execute(
+            new UpdateGoodPriceCommand(
+                'GOOD:EUR',
+                135
+            )
+        );
+
+        $this->commandBus->execute(
+            new UpdateGoodPriceCommand(
+                'GOOD:CHF',
+                133
             )
         );
 

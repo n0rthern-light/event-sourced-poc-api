@@ -4,6 +4,8 @@ namespace App\Shared\Infrastructure\EventDrivenAggregate;
 
 use Nlf\Component\Event\Aggregate\AbstractAggregateRoot;
 use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
+use Nlf\Component\Event\Aggregate\EventCollection;
+use Nlf\Component\Event\Aggregate\EventCollectionInterface;
 use Nlf\Component\Event\Aggregate\EventFactoryInterface;
 use Nlf\Component\Event\Aggregate\EventStoreInterface;
 
@@ -23,7 +25,7 @@ final class DoctrineEventStore implements EventStoreInterface
         $this->eventFactory = $eventFactory;
     }
 
-    public function storeEvents(AbstractAggregateRoot $aggregate, array $events): void
+    public function storeEvents(AbstractAggregateRoot $aggregate, EventCollectionInterface $events): void
     {
         foreach($events as $event) {
             $doctrineEvent = new Event(
@@ -40,11 +42,11 @@ final class DoctrineEventStore implements EventStoreInterface
         $this->repository->save();
     }
 
-    public function getEvents(AggregateUuidInterface $uuid): array
+    public function getEvents(AggregateUuidInterface $uuid): EventCollectionInterface
     {
         /** @var Event[] $doctrineEvents */
         $doctrineEvents = $this->repository->findBy([
-            'aggregateUuid' => Uuid::fromString((string)$uuid)
+            'aggregateUuid' => (string)$uuid
         ]);
 
         $events = [];
@@ -57,6 +59,6 @@ final class DoctrineEventStore implements EventStoreInterface
             );
         }
 
-        return $events;
+        return new EventCollection(...$events);
     }
 }

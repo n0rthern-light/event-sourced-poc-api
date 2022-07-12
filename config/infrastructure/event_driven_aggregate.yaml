@@ -3,7 +3,7 @@ services:
     class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedProjectionService
     arguments:
       - !service_locator
-          App\Good\Command\GoodPriceAggregate: '@App\Good\Projection\GoodPriceViewProjectionService'
+          App\Good\Command\GoodAggregate: '@App\Good\Projection\GoodViewProjectionService'
 
   app.shared.infrastructure.eda.routed_event_factory:
     class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedEventFactory

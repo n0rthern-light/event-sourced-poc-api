@@ -6,12 +6,12 @@ use App\Shared\CQRS\CommandBus\CommandInterface;
 
 final class UpdateGoodPriceCommand implements CommandInterface
 {
-    public string $goodCode;
+    public string $aggregateUuid;
     public float $priceInUsd;
 
-    public function __construct(string $goodCode, float $priceInUsd)
+    public function __construct(string $aggregateUuid, float $priceInUsd)
     {
-        $this->goodCode = $goodCode;
+        $this->aggregateUuid = $aggregateUuid;
         $this->priceInUsd = $priceInUsd;
     }
 }

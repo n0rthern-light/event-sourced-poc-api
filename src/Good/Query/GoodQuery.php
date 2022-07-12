@@ -4,16 +4,16 @@ namespace App\Good\Query;
 
 use App\Money\DollarAwareCurrencyInterface;
 
-class GoodPriceQuery
+class GoodQuery
 {
-    private GoodPriceViewRepositoryInterface $repository;
+    private GoodViewRepositoryInterface $repository;
 
-    public function __construct(GoodPriceViewRepositoryInterface $repository)
+    public function __construct(GoodViewRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
-    public function query(string $goodCode, DollarAwareCurrencyInterface $inCurrency): ?GoodPriceDto
+    public function query(string $goodCode, DollarAwareCurrencyInterface $inCurrency): ?GoodDto
     {
         $view = $this->repository->findOneByGoodCode($goodCode);
 
@@ -21,7 +21,7 @@ class GoodPriceQuery
             return null;
         }
 
-        return new GoodPriceDto(
+        return new GoodDto(
             $view->getCode(),
             $view->getName(),
             $view->getLastPrice()->toCurrency($inCurrency),

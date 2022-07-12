@@ -24,4 +24,9 @@ class GoodPriceUpdatedEvent extends AbstractAggregateEvent
     {
         return ['priceInUsd' => $this->priceInUsd];
     }
+
+    public function getPriceInUsd(): float
+    {
+        return $this->priceInUsd;
+    }
 }

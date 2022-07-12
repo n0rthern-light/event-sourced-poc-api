@@ -5,7 +5,7 @@ namespace App\Good\Query;
 use App\Money\MoneyInterface;
 use DateTimeImmutable;
 
-class GoodPriceDto
+class GoodDto
 {
     public string $code;
     public string $name;

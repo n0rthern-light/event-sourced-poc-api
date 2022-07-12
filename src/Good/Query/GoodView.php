@@ -3,16 +3,16 @@
 namespace App\Good\Query;
 
 use App\Money\DollarMoney;
-use DateTimeImmutable;
+use DateTimeInterface;
 
-class GoodPriceView
+class GoodView
 {
     private string $code;
     private string $name;
     private DollarMoney $lastPrice;
-    private DateTimeImmutable $priceUpdatedOn;
+    private DateTimeInterface $priceUpdatedOn;
 
-    public function __construct(string $code, string $name, DollarMoney $lastPrice, DateTimeImmutable $priceUpdatedOn)
+    public function __construct(string $code, string $name, DollarMoney $lastPrice, DateTimeInterface $priceUpdatedOn)
     {
         $this->code = $code;
         $this->name = $name;
@@ -35,7 +35,7 @@ class GoodPriceView
         return $this->lastPrice;
     }
 
-    public function getPriceUpdatedOn(): DateTimeImmutable
+    public function getPriceUpdatedOn(): DateTimeInterface
     {
         return $this->priceUpdatedOn;
     }

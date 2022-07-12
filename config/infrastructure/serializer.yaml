@@ -1,0 +1,2 @@
+services:
+  App\Shared\Serializer\JsonSerializerInterface: '@App\Shared\Serializer\SymfonyJsonSerializer'

@@ -7,7 +7,7 @@ use App\Money\DollarMoney;
 use Nlf\Component\Event\Aggregate\AbstractAggregateRoot;
 use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
 
-class GoodPriceAggregate extends AbstractAggregateRoot
+class GoodAggregate extends AbstractAggregateRoot
 {
     public function __construct(AggregateUuidInterface $uuid)
     {
