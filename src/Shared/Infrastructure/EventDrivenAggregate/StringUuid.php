@@ -2,9 +2,9 @@
 
 namespace App\Shared\Infrastructure\EventDrivenAggregate;
 
-use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
+use Nlf\Component\Event\Aggregate\Shared\UuidInterface;
 
-final class StringUuid implements AggregateUuidInterface
+final class StringUuid implements UuidInterface
 {
     private string $value;
 

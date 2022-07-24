@@ -2,21 +2,21 @@
 
 namespace App\Good\Event;
 
-use App\Money\DollarMoney;
 use Nlf\Component\Event\Aggregate\Event\EventFactoryInterface;
 use Nlf\Component\Event\Aggregate\Event\EventInterface;
 use Nlf\Component\Event\Aggregate\Event\EventProps;
 
-final class GoodPriceUpdatedEventFactory implements EventFactoryInterface
+final class GoodCreatedEventFactory implements EventFactoryInterface
 {
     public function create(
         string $eventName,
         EventProps $props,
         array $payload
     ): EventInterface {
-        return new GoodPriceUpdatedEvent(
+        return new GoodCreatedEvent(
             $props,
-            new DollarMoney($payload['priceInUsd']),
+            $payload['goodCode'],
+            $payload['goodName']
         );
     }
 }

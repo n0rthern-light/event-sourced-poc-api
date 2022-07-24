@@ -2,14 +2,15 @@
 
 namespace App\Shared\Infrastructure\EventDrivenAggregate;
 
-use Nlf\Component\Event\Aggregate\AbstractAggregateRoot;
-use Nlf\Component\Event\Aggregate\EventCollectionInterface;
-use Nlf\Component\Event\Aggregate\ProjectionServiceInterface;
+use App\Shared\String\ClassReference;
+use Nlf\Component\Event\Aggregate\Aggregate\AbstractAggregateRoot;
+use Nlf\Component\Event\Aggregate\Event\EventCollectionInterface;
+use Nlf\Component\Event\Aggregate\Event\EventProjectionServiceInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Webmozart\Assert\Assert;
 
-final class RoutedProjectionService implements ProjectionServiceInterface
+final class RoutedProjectionService implements EventProjectionServiceInterface
 {
     private ContainerInterface $container;
 
@@ -20,15 +21,17 @@ final class RoutedProjectionService implements ProjectionServiceInterface
 
     public function execute(AbstractAggregateRoot $aggregate, EventCollectionInterface $events): void
     {
-        if (!$this->container->has($aggregate::class)) {
+        $serviceReference = ClassReference::getShortClassName($aggregate::class);
+
+        if (!$this->container->has($serviceReference)) {
 
             throw new RuntimeException('Not found any $projectionService for ' . $aggregate::class);
         }
 
-        /** @var ProjectionServiceInterface $projectionService */
-        $projectionService = $this->container->get($aggregate::class);
+        /** @var EventProjectionServiceInterface $projectionService */
+        $projectionService = $this->container->get($serviceReference);
 
-        Assert::isInstanceOf($projectionService, ProjectionServiceInterface::class);
+        Assert::isInstanceOf($projectionService, EventProjectionServiceInterface::class);
         Assert::notInstanceOf($projectionService, self::class);
 
         $projectionService->execute($aggregate, $events);

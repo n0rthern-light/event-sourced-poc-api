@@ -2,25 +2,34 @@
 
 namespace App\Good\Query;
 
-use App\Money\MoneyInterface;
-use DateTimeImmutable;
+use JsonSerializable;
 
-class GoodDto
+class GoodDto implements JsonSerializable
 {
+    public string $uuid;
     public string $code;
     public string $name;
-    public MoneyInterface $lastPrice;
-    public DateTimeImmutable $priceUpdatedOn;
+    public float $lastPrice;
+    public string $priceInCurrency;
+    public string $priceUpdateTimestamp;
 
-    public function __construct(
-        string $code,
-        string $name,
-        MoneyInterface $lastPrice,
-        DateTimeImmutable $priceUpdatedOn
-    ) {
+    public function __construct(string $uuid, string $code, string $name, float $lastPrice, string $priceInCurrency, string $priceUpdateTimestamp)
+    {
+        $this->uuid = $uuid;
         $this->code = $code;
         $this->name = $name;
         $this->lastPrice = $lastPrice;
-        $this->priceUpdatedOn = $priceUpdatedOn;
+        $this->priceInCurrency = $priceInCurrency;
+        $this->priceUpdateTimestamp = $priceUpdateTimestamp;
+    }
+
+    public function __toString(): string
+    {
+        return $this->uuid . ' | ' . $this->code . ' | ' . $this->name . ' | ' . $this->lastPrice . ' ' . $this->priceInCurrency . ' | ' . $this->priceUpdateTimestamp;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return \get_object_vars($this);
     }
 }

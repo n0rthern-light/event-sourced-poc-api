@@ -2,10 +2,9 @@
 
 namespace App\Shared\Infrastructure\EventDrivenAggregate;
 
-use DateTimeInterface;
-use Nlf\Component\Event\Aggregate\AggregateEventInterface;
-use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
-use Nlf\Component\Event\Aggregate\EventFactoryInterface;
+use Nlf\Component\Event\Aggregate\Event\EventFactoryInterface;
+use Nlf\Component\Event\Aggregate\Event\EventInterface;
+use Nlf\Component\Event\Aggregate\Event\EventProps;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Webmozart\Assert\Assert;
@@ -21,10 +20,9 @@ final class RoutedEventFactory implements EventFactoryInterface
 
     public function create(
         string $eventName,
-        AggregateUuidInterface $aggregateUuid,
-        DateTimeInterface $createdAt,
+        EventProps $props,
         array $payload
-    ): AggregateEventInterface {
+    ): EventInterface {
         if (!$this->container->has($eventName)) {
             throw new RuntimeException('Factory for ' . $eventName . ' not found!');
         }
@@ -37,8 +35,7 @@ final class RoutedEventFactory implements EventFactoryInterface
 
         return $factory->create(
             $eventName,
-            $aggregateUuid,
-            $createdAt,
+            $props,
             $payload
         );
     }

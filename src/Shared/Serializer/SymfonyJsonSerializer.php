@@ -2,17 +2,16 @@
 
 namespace App\Shared\Serializer;
 
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerBuilder;
 
 final class SymfonyJsonSerializer implements JsonSerializerInterface
 {
-    private Serializer $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct()
     {
-        $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $this->serializer = SerializerBuilder::create()->build();
     }
 
     public function serialize(object $object): string

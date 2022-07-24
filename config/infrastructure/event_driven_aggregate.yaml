@@ -3,12 +3,13 @@ services:
     class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedProjectionService
     arguments:
       - !service_locator
-          App\Good\Command\GoodAggregate: '@App\Good\Projection\GoodViewProjectionService'
+          GoodAggregate: '@App\Good\Event\GoodViewProjectionService'
 
   app.shared.infrastructure.eda.routed_event_factory:
     class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedEventFactory
     arguments:
       - !service_locator
+          GoodCreatedEvent: '@App\Good\Event\GoodCreatedEventFactory'
           GoodPriceUpdatedEvent: '@App\Good\Event\GoodPriceUpdatedEventFactory'
 
   app.shared.infrastructure.eda.doctrine_event_store:
@@ -17,10 +18,33 @@ services:
       - '@App\Shared\Infrastructure\EventDrivenAggregate\EventRepository'
       - '@app.shared.infrastructure.eda.routed_event_factory'
 
+  app.shared.infrastructure.eda.routed_snapshot_factory:
+    class: App\Shared\Infrastructure\EventDrivenAggregate\RoutedSnapshotFactory
+    arguments:
+      - !service_locator
+        GoodAggregate: '@App\Good\Snapshot\GoodAggregateSnapshotFactory'
+
+  app.shared.infrastructure.eda.doctrine_snapshot_store:
+    class: App\Shared\Infrastructure\EventDrivenAggregate\DoctrineSnapshotStore
+    arguments:
+      - '@App\Shared\Infrastructure\EventDrivenAggregate\SnapshotRepository'
+      - '@app.shared.infrastructure.eda.routed_snapshot_factory'
+
+  nlf.component.event.snapshot_policy:
+    class: Nlf\Component\Event\Aggregate\Snapshot\SnapshotPolicy
+    arguments:
+      $factory: '@app.shared.infrastructure.eda.routed_snapshot_factory'
+      $store: '@app.shared.infrastructure.eda.doctrine_snapshot_store'
+      $snapshotEnabled: true
+      $snapshotChunkSize: 100
+
   nlf.component.event.aggregate_events_handler:
-    class: Nlf\Component\Event\Aggregate\AggregateEventsHandler
+    class: Nlf\Component\Event\Aggregate\Aggregate\AggregateEventsHandler
     arguments:
       $eventStore: '@app.shared.infrastructure.eda.doctrine_event_store'
+      $snapshotPolicy: '@nlf.component.event.snapshot_policy'
       $projectionService: '@app.shared.infrastructure.eda.routed_projection_service'
 
-  Nlf\Component\Event\Aggregate\AggregateEventsHandler: '@nlf.component.event.aggregate_events_handler'
+  Nlf\Component\Event\Aggregate\Aggregate\AggregateEventsHandler: '@nlf.component.event.aggregate_events_handler'
+  Nlf\Component\Event\Aggregate\Event\EventStoreInterface: '@app.shared.infrastructure.eda.doctrine_event_store'
+  Nlf\Component\Event\Aggregate\Snapshot\SnapshotStoreInterface: '@app.shared.infrastructure.eda.doctrine_snapshot_store'

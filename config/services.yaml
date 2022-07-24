@@ -14,3 +14,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\UserInterface\Api\:
+        resource: '../src/UserInterface/Api/'
+        tags: ['controller.service_arguments']

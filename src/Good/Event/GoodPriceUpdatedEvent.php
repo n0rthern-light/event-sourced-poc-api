@@ -3,21 +3,19 @@
 namespace App\Good\Event;
 
 use App\Money\DollarMoney;
-use DateTimeInterface;
-use Nlf\Component\Event\Aggregate\AbstractAggregateEvent;
-use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
+use Nlf\Component\Event\Aggregate\Event\AbstractEvent;
+use Nlf\Component\Event\Aggregate\Event\EventProps;
 
-class GoodPriceUpdatedEvent extends AbstractAggregateEvent
+class GoodPriceUpdatedEvent extends AbstractEvent
 {
     private float $priceInUsd;
 
     public function __construct(
-        AggregateUuidInterface $aggregateUuid,
+        EventProps $props,
         DollarMoney $price,
-        ?DateTimeInterface $createdAt = null
     ) {
         $this->priceInUsd = $price->getAmount();
-        parent::__construct($aggregateUuid, $createdAt);
+        parent::__construct($props);
     }
 
     public function getJsonPayload(): array

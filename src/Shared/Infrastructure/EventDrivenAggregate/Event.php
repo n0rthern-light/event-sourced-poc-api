@@ -5,8 +5,7 @@ namespace App\Shared\Infrastructure\EventDrivenAggregate;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Nlf\Component\Event\Aggregate\AggregateUuidInterface;
-use Symfony\Component\Uid\Uuid;
+use Nlf\Component\Event\Aggregate\Shared\UuidInterface;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -15,6 +14,9 @@ class Event
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id;
+
+    #[ORM\Column(type: 'string')]
+    private string $eventUuid;
 
     #[ORM\Column(type: 'string')]
     private string $aggregateUuid;
@@ -30,12 +32,14 @@ class Event
 
     public function __construct(
         ?int $id,
-        AggregateUuidInterface $aggregateUuid,
+        UuidInterface $eventUuid,
+        UuidInterface $aggregateUuid,
         string $eventName,
         array $payload,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
+        $this->eventUuid = (string)$eventUuid;
         $this->aggregateUuid = (string)$aggregateUuid;
         $this->eventName = $eventName;
         $this->payload = $payload;
@@ -48,9 +52,14 @@ class Event
         return $this->id;
     }
 
-    public function getAggregateUuid(): AggregateUuidInterface
+    public function getAggregateUuid(): UuidInterface
     {
         return new StringUuid($this->aggregateUuid);
+    }
+
+    public function getEventUuid(): UuidInterface
+    {
+        return new StringUuid($this->eventUuid);
     }
 
     public function getEventName(): ?string

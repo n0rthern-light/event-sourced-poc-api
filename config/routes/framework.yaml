@@ -2,3 +2,8 @@ when@dev:
     _errors:
         resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
         prefix: /_error
+
+user_interface:
+    resource: '../../src/UserInterface/Api/**/*'
+    type: annotation
+    prefix: /api

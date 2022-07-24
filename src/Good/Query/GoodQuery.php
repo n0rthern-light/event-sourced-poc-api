@@ -3,6 +3,7 @@
 namespace App\Good\Query;
 
 use App\Money\DollarAwareCurrencyInterface;
+use App\Money\DollarMoney;
 
 class GoodQuery
 {
@@ -13,19 +14,20 @@ class GoodQuery
         $this->repository = $repository;
     }
 
-    public function query(string $goodCode, DollarAwareCurrencyInterface $inCurrency): ?GoodDto
+    public function queryAll(string $inGoodCode = 'USD'): array
     {
-        $view = $this->repository->findOneByGoodCode($goodCode);
+        $views = $this->repository->findAll();
 
-        if (!$view) {
-            return null;
-        }
+        return \array_map(function(GoodView $view) use ($inGoodCode) {
+            return new GoodDto(
+                $view->uuid,
+                $view->code,
+                $view->name,
+                $view->lastPriceInUsd,
+                $inGoodCode,
+                $view->priceUpdatedOn->format('Y-m-d H:i:s')
+            );
+        }, $views);
 
-        return new GoodDto(
-            $view->getCode(),
-            $view->getName(),
-            $view->getLastPrice()->toCurrency($inCurrency),
-            $view->getPriceUpdatedOn()
-        );
     }
 }
